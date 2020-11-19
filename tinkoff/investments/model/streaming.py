@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional, ClassVar, Type, TypeVar, Any
+from decimal import Decimal
 
 from mashumaro import DataClassJSONMixin
 
@@ -74,10 +75,10 @@ class CandleEvent(BaseEvent):
     figi: FigiName
     time: ISODateTime
     interval: CandleResolution
-    o: float
-    c: float
-    h: float
-    l: float
+    o: Decimal
+    c: Decimal
+    h: Decimal
+    l: Decimal
     v: int
 
     def key(self):
@@ -123,12 +124,12 @@ class OrderBookEvent(BaseEvent):
 class InstrumentInfoEvent(BaseEvent):
     event_name = EventName.INSTRUMENT_INFO
     figi: FigiName
-    min_price_increment: float
-    lot: float
+    min_price_increment: Decimal
+    lot: Decimal
     trade_status: str
-    accrued_interest: Optional[float] = None
-    limit_up: Optional[float] = None
-    limit_down: Optional[float] = None
+    accrued_interest: Optional[Decimal] = None
+    limit_up: Optional[Decimal] = None
+    limit_down: Optional[Decimal] = None
 
     def key(self):
         return self.key_type(figi=self.figi)

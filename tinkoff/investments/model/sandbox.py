@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from decimal import Decimal
 
 from tinkoff.investments.model.base import BaseModel, Currency, FigiName
 from tinkoff.investments.model.user.accounts import (
@@ -21,13 +22,13 @@ class SandboxAccountRegisterRequest(BaseModel):
 @dataclass
 class SandboxSetCurrencyBalanceRequest(BaseModel):
     currency: Currency
-    balance: float
+    balance: Decimal
 
 
 @dataclass
 class SandboxSetPositionBalanceRequest(BaseModel):
     figi: FigiName
-    balance: float
+    balance: Decimal
 
 
 __all__ = [

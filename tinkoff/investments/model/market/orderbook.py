@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 from enum import Enum
+from decimal import Decimal
 
 from tinkoff.investments.model.base import BaseModel, FigiName
 
@@ -12,7 +13,7 @@ class TradingStatus(Enum):
 
 @dataclass
 class OrderBookEntity(BaseModel):
-    price: float
+    price: Decimal
     quantity: int
 
 
@@ -23,12 +24,12 @@ class OrderBook(BaseModel):
     bids: List[OrderBookEntity]
     asks: List[OrderBookEntity]
     tradeStatus: TradingStatus
-    minPriceIncrement: float
-    faceValue: Optional[float] = None
-    lastPrice: Optional[float] = None
-    closePrice: Optional[float] = None
-    limitUp: Optional[float] = None
-    limitDown: Optional[float] = None
+    minPriceIncrement: Decimal
+    faceValue: Optional[Decimal] = None
+    lastPrice: Optional[Decimal] = None
+    closePrice: Optional[Decimal] = None
+    limitUp: Optional[Decimal] = None
+    limitDown: Optional[Decimal] = None
 
 
 __all__ = [

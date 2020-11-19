@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, List
+from decimal import Decimal
 
 from tinkoff.investments.model.base import (
     BaseModel,
@@ -19,7 +20,7 @@ class MarketInstrument(BaseModel):
     type: InstrumentType
     currency: Optional[Currency] = None
     isin: Optional[str] = None
-    minPriceIncrement: Optional[float] = None
+    minPriceIncrement: Optional[Decimal] = None
     minQuantity: Optional[int] = None
 
 

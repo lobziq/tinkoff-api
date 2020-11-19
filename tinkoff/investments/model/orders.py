@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
+from decimal import Decimal
 
 from tinkoff.investments.model.base import BaseModel, FigiName, MoneyAmount
 from tinkoff.investments.model.operations import OperationType
@@ -35,14 +36,14 @@ class Order(BaseModel):
     requestedLots: int
     executedLots: int
     type: OrderType
-    price: float
+    price: Decimal
 
 
 @dataclass
 class LimitOrderRequest(BaseModel):
     lots: int
     operation: OperationType
-    price: float
+    price: Decimal
 
 
 @dataclass

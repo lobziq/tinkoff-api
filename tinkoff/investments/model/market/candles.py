@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 from enum import Enum
+from decimal import Decimal
 
 from tinkoff.investments.model.base import BaseModel, ISODateTime, FigiName
 
@@ -24,10 +25,10 @@ class Candle(BaseModel):
     figi: FigiName
     interval: CandleResolution
     # TODO: сделать алиасы на понятные названия
-    o: float
-    c: float
-    h: float
-    l: float
+    o: Decimal
+    c: Decimal
+    h: Decimal
+    l: Decimal
     v: int
     time: ISODateTime
 

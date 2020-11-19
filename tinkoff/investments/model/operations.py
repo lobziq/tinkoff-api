@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
+from decimal import Decimal
 
 from tinkoff.investments.model.base import (
     BaseModel,
@@ -55,7 +56,7 @@ class OperationTypeWithCommission(Enum):
 class OperationTrade(BaseModel):
     tradeId: TradeID
     date: ISODateTime
-    price: float
+    price: Decimal
     quantity: int
 
 
@@ -64,12 +65,12 @@ class Operation(BaseModel):
     id: OperationID
     status: OperationStatus
     currency: Currency
-    payment: float
+    payment: Decimal
     isMarginCall: bool
     date: ISODateTime
     trades: Optional[List[OperationTrade]] = None
     commission: Optional[MoneyAmount] = None
-    price: Optional[float] = None
+    price: Optional[Decimal] = None
     quantity: Optional[int] = None
     figi: Optional[FigiName] = None
     instrumentType: Optional[InstrumentType] = None

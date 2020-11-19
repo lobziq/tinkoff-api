@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from tinkoff.investments.api.base import BaseTinkoffInvestmentsAPI
 from tinkoff.investments.model.base import Currency, FigiName
 from tinkoff.investments.model.sandbox import (
@@ -14,7 +16,7 @@ from tinkoff.investments.model.user.accounts import (
 
 class SandboxAccountCurrenciesAPI(BaseTinkoffInvestmentsAPI):
     async def set_balance(self, broker_account_id, currency, balance):
-        # type: (BrokerAccountID, Currency, float) -> None
+        # type: (BrokerAccountID, Currency, Decimal) -> None
         await self._request(
             method='POST',
             path='/sandbox/currencies/balance',
@@ -30,7 +32,7 @@ class SandboxAccountCurrenciesAPI(BaseTinkoffInvestmentsAPI):
 
 class SandboxAccountPositionsAPI(BaseTinkoffInvestmentsAPI):
     async def set_balance(self, broker_account_id, figi, balance):
-        # type: (BrokerAccountID, FigiName, float) -> None
+        # type: (BrokerAccountID, FigiName, Decimal) -> None
         await self._request(
             method='POST',
             path='/sandbox/positions/balance',

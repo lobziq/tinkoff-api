@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Optional
+from decimal import Decimal
 
 from tinkoff.investments.model.base import (
     BaseModel,
@@ -15,7 +16,7 @@ from tinkoff.investments.model.base import (
 class PortfolioPosition(BaseModel):
     figi: FigiName
     instrumentType: InstrumentType
-    balance: float
+    balance: Decimal
     lots: int
     name: str
     ticker: Optional[TickerName] = None
@@ -29,7 +30,7 @@ class PortfolioPosition(BaseModel):
 @dataclass
 class CurrencyPosition(BaseModel):
     currency: Currency
-    balance: float
+    balance: Decimal
     blocked: Optional[float] = None
 
 

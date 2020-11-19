@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
+from decimal import Decimal
 
 import ciso8601
 from mashumaro import DataClassJSONMixin
@@ -49,7 +50,7 @@ class InstrumentType(Enum):
 @dataclass
 class MoneyAmount(BaseModel):
     currency: Currency
-    value: float
+    value: Decimal
 
 
 class ISODateTime(datetime, SerializableType):

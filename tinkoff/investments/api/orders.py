@@ -1,4 +1,5 @@
 from typing import Dict, List
+from decimal import Decimal
 
 from tinkoff.base import RateLimiter
 from tinkoff.investments.api.base import BaseTinkoffInvestmentsAPI
@@ -47,7 +48,7 @@ class OrdersAPI(BaseTinkoffInvestmentsAPI):
             figi: FigiName,
             lots: int,
             operation: OperationType,
-            price: float,
+            price: Decimal,
             broker_account_id: BrokerAccountID = None
     ) -> PlacedLimitOrder:
 
