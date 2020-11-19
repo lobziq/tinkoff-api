@@ -2,9 +2,10 @@ import asyncio
 import json
 from typing import Any, Dict, Optional
 from decimal import Decimal
-
+from functools import partial
 
 from aiohttp import ClientConnectionError
+from aiohttp.typedefs import DEFAULT_JSON_DECODER
 
 from tinkoff.base import BaseHTTPClient, RateLimiter, RateLimitReached
 from tinkoff.investments.api import (
@@ -32,6 +33,7 @@ class TinkoffInvestmentsRESTClient(BaseHTTPClient):
             environment: Environment = Environment.PRODUCTION,
             timeout: Optional[float] = 5,
             wait_on_rate_limit: bool = True,
+            float_as_decimal: bool = False
     ):
 
         super(TinkoffInvestmentsRESTClient, self).__init__(
@@ -41,6 +43,11 @@ class TinkoffInvestmentsRESTClient(BaseHTTPClient):
             },
             timeout=timeout,
         )
+
+        if float_as_decimal:
+            self._decoder = partial(json.loads, parse_float=Decimal)
+        else:
+            self._decoder = DEFAULT_JSON_DECODER
         self.sandbox = SandboxAPI(self)
         self.orders = OrdersAPI(self)
         self.portfolio = PortfolioAPI(self)
@@ -67,7 +74,7 @@ class TinkoffInvestmentsRESTClient(BaseHTTPClient):
                 raise TinkoffInvestmentsUnavailableError
             else:
                 # TODO: ловить другие исключения, если в ответе не json
-                return await response.json(loads=lambda: json.loads(parse_float=Decimal))
+                return await response.json(loads=self._decoder)
         except asyncio.TimeoutError:
             raise TinkoffInvestmentsTimeoutError from None
         except RateLimitReached:
