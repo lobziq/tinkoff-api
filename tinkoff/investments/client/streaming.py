@@ -1,7 +1,10 @@
 import asyncio
 import logging
+import json
 from datetime import datetime
 from typing import Any, Dict, Type, Optional, Callable, List
+from decimal import Decimal
+from functools import partial
 
 from aiohttp import ClientWebSocketResponse, WSMsgType, ClientError
 
@@ -18,7 +21,6 @@ from tinkoff.investments.model.streaming import (
     EventName,
 )
 
-
 logger = logging.getLogger('streaming-api')
 
 
@@ -34,6 +36,7 @@ class BaseEventStream:
             self._subscribers[
                 self.EVENT_TYPE.key_type(*args, **kwargs)] = callback
             return callback
+
         return decorator
 
     async def subscribe(self, callback, *args, **kwargs):
@@ -100,6 +103,7 @@ class TinkoffInvestmentsStreamingClient(BaseHTTPClient):
             receive_timeout: Optional[float] = 5,
             heartbeat: Optional[float] = 3,
             reconnect_timeout: float = 3,
+            float_as_decimal: bool = False
     ):
         super().__init__(
             base_url=EnvironmentURL[Environment.STREAMING],
@@ -107,6 +111,12 @@ class TinkoffInvestmentsStreamingClient(BaseHTTPClient):
                 'authorization': f'Bearer {token}'
             }
         )
+
+        if float_as_decimal:
+            self._decoder = partial(json.loads, parse_float=Decimal)
+        else:
+            self._decoder = json.loads
+
         self.events = events or EventsBroker()
         self.events.add_publisher(self)
         self._ws = None  # type: Optional[ClientWebSocketResponse]
@@ -124,10 +134,10 @@ class TinkoffInvestmentsStreamingClient(BaseHTTPClient):
                 return
             try:
                 async with self._session.ws_connect(
-                    url=self._base_url,
-                    timeout=0.,
-                    receive_timeout=self._receive_timeout,
-                    heartbeat=self._heartbeat,
+                        url=self._base_url,
+                        timeout=0.,
+                        receive_timeout=self._receive_timeout,
+                        heartbeat=self._heartbeat,
                 ) as ws:
                     self._ws = ws
                     await self._run(ws)
@@ -142,7 +152,7 @@ class TinkoffInvestmentsStreamingClient(BaseHTTPClient):
             # noinspection PyUnresolvedReferences
             if msg.type == WSMsgType.TEXT:
                 # noinspection PyUnresolvedReferences
-                msg = StreamingMessage.from_json(msg.data)
+                msg = StreamingMessage.from_json(msg.data, decoder=self._decoder)
                 try:
                     await self.events.publish(
                         event=msg.parsed_payload,
