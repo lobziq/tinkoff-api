@@ -1,5 +1,8 @@
 import asyncio
+import json
 from typing import Any, Dict, Optional
+from decimal import Decimal
+
 
 from aiohttp import ClientConnectionError
 
@@ -64,7 +67,7 @@ class TinkoffInvestmentsRESTClient(BaseHTTPClient):
                 raise TinkoffInvestmentsUnavailableError
             else:
                 # TODO: ловить другие исключения, если в ответе не json
-                return await response.json()
+                return await response.json(loads=lambda: json.loads(parse_float=Decimal))
         except asyncio.TimeoutError:
             raise TinkoffInvestmentsTimeoutError from None
         except RateLimitReached:
