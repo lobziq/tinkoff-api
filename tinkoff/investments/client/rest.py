@@ -48,6 +48,7 @@ class TinkoffInvestmentsRESTClient(BaseHTTPClient):
             self._decoder = partial(json.loads, parse_float=Decimal)
         else:
             self._decoder = DEFAULT_JSON_DECODER
+        
         self.sandbox = SandboxAPI(self)
         self.orders = OrdersAPI(self)
         self.portfolio = PortfolioAPI(self)
